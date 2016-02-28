@@ -185,6 +185,12 @@ function Login2()
 			return $open_id;
 	}
 
+	// smf4b: log in using the account shared by all bots
+	if (!isset($_POST['user']) || $_POST['user'] != 'root')
+	{
+		$_POST['user'] = 'Someone';
+	}
+
 	// You forgot to type your username, dummy!
 	if (!isset($_POST['user']) || $_POST['user'] == '')
 	{
@@ -257,6 +263,12 @@ function Login2()
 
 	$user_settings = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
+
+	// smf4b: if it's not the admin user trying to log in, don't even check the password
+	if ($user_settings['id_member'] != 1)
+	{
+		DoLogin();
+	}
 
 	// Figure out the password using SMF's encryption - if what they typed is right.
 	if (isset($_POST['hash_passwrd']) && strlen($_POST['hash_passwrd']) == 40)

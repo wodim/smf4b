@@ -1,0 +1,37 @@
+smf4b (smf for bots)
+====================
+
+smf very slightly tuned to make bots happy.
+
+installation is easy: install normally, calling your account "root".
+then create another account (which must have 2 as its id) called
+"Someone". if you want you can change the display names for them later.
+
+then configure your forum. let everybody post everywhere, disable
+all captchas and limits, misconfigure your mail settings on purpose
+(for example set server type as smtp with an address of 255.255.255.255),
+etc.
+
+in the smf_log_activity table, you may want to change all columns
+to use mediumint instead of smallint, which has a limit of 65535 and
+will most probably not be enough.
+
+if you have problems of space or just want to make everything go faster,
+you can have the empty.sql file executed every hour or so to empty
+the forum. that removes all users, threads and posts, but the stats are
+preserved. you can also optimise the tables and flush all caches from
+time to time. take this crontab as an example.
+
+*/10 * * * * mysql -usmf -psmf smf < /srv/http/smf/empty.sql
+*/30 * * * * mysqlcheck -r -usmf -psmf smf && mysqlcheck -o -usmf -psmf smf
+*/30 * * * * find /srv/http/smf/cache/ -type f -delete
+*/30 * * * * find /srv/http/smf/attachments/ -type f -delete
+
+in my experience, myisam tables get corrupted every few days, and ariadb
+crashes all the time, so you may want to convert all your tables to innodb.
+you can also use row compression with innodb, at the expense of cpu use.
+
+you probably also want google not to crawl your site. you can create a
+local.php file inside the root folder and that code will be executed before
+everything. so you can have code there to check for the googlebot user
+agent, return a 404 and then exit().

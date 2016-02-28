@@ -1,5 +1,8 @@
 <?php
 
+if (file_exists(dirname(__FILE__) . '/local.php'))
+	require(dirname(__FILE__) . '/local.php');
+
 /**
  * Simple Machines Forum (SMF)
  *
@@ -21,6 +24,8 @@ $mmessage = 'Okay faithful users...we\'re attempting to restore an older backup 
 $mbname = 'My Community';		# The name of your forum.
 $language = 'english';		# The default language file set for the forum.
 $boardurl = 'http://127.0.0.1/smf';		# URL to your forum's folder. (without the trailing /!)
+// smf4b
+$boardurl = 'http://'.$_SERVER['HTTP_HOST'];
 $webmaster_email = 'noreply@myserver.com';		# Email address to send emails from. (like noreply@yourdomain.com.)
 $cookiename = 'SMFCookie11';		# Name of the cookie to set for authentication.
 

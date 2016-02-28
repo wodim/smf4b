@@ -719,7 +719,8 @@ function template_not_done()
 	</div>
 	<br class="clear" />
 	<script type="text/javascript"><!-- // --><![CDATA[
-		var countdown = ', $context['continue_countdown'], ';
+		// smf4b: just continue immediately
+		var countdown = 0;
 		doAutoSubmit();
 
 		function doAutoSubmit()
