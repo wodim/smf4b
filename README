@@ -31,6 +31,25 @@ in my experience, myisam tables get corrupted every few days, and ariadb
 crashes all the time, so you may want to convert all your tables to innodb.
 you can also use row compression with innodb, at the expense of cpu use.
 
+in an extreme case, you can also choose to "cripple" your site a bit in
+exchange for even more speed. by crippling, I mean disabling features that
+are part of the core. for the sake of simplicity, I configure mysql to use
+the BLACKHOLE storage engine for the following tables:
+* smf_log_online (removes the online list)
+* smf_log_floodcontrol (flood control stops working, not that we want any)
+* smf_log_digest (not sure, full of crap)
+* smf_log_search_subjects (used for the search engine, which is going to be
+                           disabled anyway)
+also, if you have enough ram memory, you can switch a few tables to the
+MEMORY storage engine, taking into account you'll lose their contents if
+the mysql server is restarted. the MEMORY storage engine does not allow TEXT
+fields, so you'll have to convert them to VARCHAR of an appropriate size.
+it makes a lot of sense to have smf_topics and smf_messages in memory; in the
+case of smf_messages I personally use a VARCHAR of size 0 for the message,
+which means messages are never stored at all. also, smf_sessions is a good
+candidate due to the fact a query is done on it for each page load, and it
+does not matter if the table is lost because bots will just log in again.
+
 you probably also want google not to crawl your site. you can create a
 local.php file inside the root folder and that code will be executed before
 everything. so you can have code there to check for the googlebot user
